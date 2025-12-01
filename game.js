@@ -6,7 +6,7 @@
 //        : merging happend in user input direction
 // Score Tracking: keep traking user score with every merge
 // Game end: when the board is full and there is no posible to merge
-// Winning Condition: when a tile reaches 2048
+// Winning Condition : when a tile reaches 2048
 
 /* Game */
 let board = [
