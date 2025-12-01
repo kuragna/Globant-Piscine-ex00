@@ -61,8 +61,14 @@ function start(board) {
 }
 
 document.addEventListener('keydown', (e) => {
-    start(board);
-    console.log(board);
+    
+    switch (e.key) {
+        case "ArrowUp": console.log("UP"); break;
+        case "ArrowDown": console.log("DOWN"); break;
+        case  "ArrowRight": console.log("RIGHT"); break;
+        case "ArrowLeft": console.log("LEFT"); break;
+    }
+    console.log(e);
 });
 
 start(board)
