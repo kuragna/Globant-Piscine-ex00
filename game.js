@@ -11,9 +11,9 @@
 /* Game */
 let board = [
     [null, null, null, null],
-    [null, null, null, null],
-    [null, null, null, null],
-    [null, null, null, null],
+    [null, null, null, 2],
+    [2, null, null, null],
+    [2, null, null, null],
 ];
 
 const game = document.getElementsByClassName('game');
@@ -55,16 +55,61 @@ function initBoardWithRandom(board) {
     }
 }
 
+
+function moveUp(board) {
+   for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
+            const cell = board[y][x];
+
+            if (cell) {
+                const start = 0;
+                console.log(start);
+                for (let i = start; i < y; i++) {
+                    console.log(board[i][x])
+                    if (board[i][x] == null) {
+                        board[i][x] = cell;
+                        board[y][x] = null;
+                        break;
+                    }   
+                }
+            }
+        }
+    } 
+}
+
+function moveDown(board) {
+
+    for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
+            const cell = board[y][x];
+
+            if (cell) {
+                const end = cols - 1;
+                console.log(end);
+                for (let i = end; i > y; i--) {
+                    console.log(board[i][x])
+                    if (board[i][x] == null) {
+                        board[i][x] = cell;
+                        board[y][x] = null;
+                        break;
+                    }   
+                }
+            }
+        }
+    }
+}
+
+
 function start(board) {
-    initBoardWithRandom(board);
+    //initBoardWithRandom(board);
     render(board);
 }
 
 document.addEventListener('keydown', (e) => {
     
     switch (e.key) {
-        case "ArrowUp": console.log("UP"); break;
-        case "ArrowDown": console.log("DOWN"); break;
+        case "ArrowUp": moveUp(board); render(board); break;
+        case "ArrowDown": moveDown(board); render(board); break;
         case  "ArrowRight": console.log("RIGHT"); break;
         case "ArrowLeft": console.log("LEFT"); break;
     }
