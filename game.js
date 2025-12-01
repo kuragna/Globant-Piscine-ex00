@@ -30,10 +30,6 @@ function render(board) {
     }
 }
 
-for (let i = 0; i < cells.length; i += 1) {
-    console.log(cells[i].innerHTML);
-}
-
 function getRandomNumber(max) {
     return Math.floor(Math.random() * max);
 }
@@ -68,3 +64,5 @@ document.addEventListener('keydown', (e) => {
     start(board);
     console.log(board);
 });
+
+start(board)
