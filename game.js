@@ -10,10 +10,10 @@
 
 /* Game */
 let board = [
+    [2, null, null, 2],
     [null, null, null, null],
-    [null, null, null, 2],
-    [2, null, null, null],
-    [2, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
 ];
 
 const game = document.getElementsByClassName('game');
@@ -63,7 +63,6 @@ function moveUp(board) {
 
             if (cell) {
                 const start = 0;
-                console.log(start);
                 for (let i = start; i < y; i++) {
                     console.log(board[i][x])
                     if (board[i][x] == null) {
@@ -85,15 +84,59 @@ function moveDown(board) {
 
             if (cell) {
                 const end = cols - 1;
-                console.log(end);
                 for (let i = end; i > y; i--) {
-                    console.log(board[i][x])
                     if (board[i][x] == null) {
                         board[i][x] = cell;
                         board[y][x] = null;
                         break;
                     }   
                 }
+            }
+        }
+    }
+}
+
+function moveLeft(board) {
+   for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
+            const cell = board[y][x];
+
+            if (cell) {
+
+                const start = 0;
+                
+                for (let i = 0; i < x; i++) {
+                    if (board[y][i] == null) {
+                        console.log(y, i)
+                        board[y][i] = cell;
+                        board[y][x] = null;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function moveRight(board) {
+   for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
+            const cell = board[y][x];
+
+            if (cell) {
+
+                const end = rows - 1;
+
+                for (let i = end; i > x; i--) {
+
+                    if (board[y][i] == null) {
+                        console.log(y, i)
+                        board[y][i] = cell;
+                        board[y][x] = null;
+                        break;
+                    }
+                }
+                //break;
             }
         }
     }
@@ -110,10 +153,12 @@ document.addEventListener('keydown', (e) => {
     switch (e.key) {
         case "ArrowUp": moveUp(board); render(board); break;
         case "ArrowDown": moveDown(board); render(board); break;
-        case  "ArrowRight": console.log("RIGHT"); break;
-        case "ArrowLeft": console.log("LEFT"); break;
+        case  "ArrowRight": moveRight(board); render(board); break;
+        case "ArrowLeft": ; moveLeft(board); render(board); break;
+        default: break;
     }
-    console.log(e);
+    
+    //console.log(e);
 });
 
 start(board)
