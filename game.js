@@ -16,8 +16,14 @@ let board = [
     [null, null, null, null],
 ];
 
+const colors = new Map();
+
+colors.set('2', 'red');
+
 const game = document.getElementsByClassName('game');
 const cells = document.getElementsByClassName('cell');
+
+console.log(cells[0]);
 
 const rows = board.length;
 const cols = board[0].length;
@@ -27,6 +33,7 @@ function render(board) {
         const row = Math.floor(i / cols);
         const col = i % cols;
         cells[i].innerHTML = board[row][col];
+        cells[i].style.backgroundColor = colors.get(cells[i].innerHTML);
     }
 }
 
@@ -213,6 +220,7 @@ function matchUp(board) {
 
 function start(board) {
     //initBoardWithRandom(board, 2);
+    clearColor(cells);
     render(board);
 }
 
