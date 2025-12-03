@@ -34,8 +34,10 @@ let board = [
 const game = document.getElementsByClassName('game');
 const cells = document.getElementsByClassName('cell');
 const score = document.getElementById('score');
+const bestScoreElement = document.getElementById('best-score');
 
 let currentScore = 0;
+let bestScore = 0;
 
 const rows = board.length;
 const cols = board[0].length;
@@ -52,6 +54,7 @@ function render(board) {
         cells[i].style.backgroundColor = color;
     }
     score.textContent = currentScore;
+    bestScoreElement.textContent = bestScore;
 }
 
 function getRandomNumber(max) {
@@ -82,6 +85,14 @@ function addRandomTile(board) {
 function initBoard(board, number) {
     addRandomTile(board);
     addRandomTile(board);
+}
+
+function setBestScore() {
+    const value = localStorage.getItem('bestScore');
+
+    if (currentScore > value) {
+        localStorage.setItem('bestScore', currentScore);
+    }
 }
 
 function moveUp(board) {
