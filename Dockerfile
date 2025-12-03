@@ -1,11 +1,7 @@
 FROM python:3.11-slim
 
-WORKDIR /game
-
-COPY font /game/font
-COPY index.html /game/index.html
-COPY game.js /game/game.js
-COPY style.css /game/style.css
+WORKDIR /games
+COPY game /game
 
 EXPOSE 8080
 
