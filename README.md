@@ -3,7 +3,7 @@ a single-player sliding puzzle game where the goal is to slide numbered tiles on
 ## Quick Start
 ```console
 $ git clone https://github.com/kuragna/Globant-Piscine-ex00.git
-$ docker compose -f ./docker-compose.yaml run game
+$ docker compose -f ./docker-compose.yaml up
 ```
 ## Gameplay
 2048 is played on a **4×4 grid**. Each turn, you can slide all tiles **up, down, left, or right**. When two tiles with the same number collide, they merge into one tile with double the value `(2 + 2 = 4, 4 + 4 = 8)`.
