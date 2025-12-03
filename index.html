@@ -4,46 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2048 Game</title>
-
-    <style>
-
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            
-            background-color: #f0f0f0;
-        }
-
-        .game {
-            display: grid;
-            grid-template-columns: repeat(4, 100px);
-            grid-template-rows: repeat(4, 100px);
-            gap: 5px;
-        }
-
-        .game div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: lightgray;
-            font-size: 30px;
-            font-weight: bold;
-            border: 1px solid #000;
-        }
-
-        .cell {
-            font-size: 20px;
-        }
-
-        </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
+    <div class="score-board">
+        <div>
+            Score <br><span id="score"></span>
+        </div>
+        <div class="best-score">
+            Best <br><span>0</span>
+        </div>
+    </div>
     <div class="game">
         <div class="cell"></div>
         <div class="cell"></div>
