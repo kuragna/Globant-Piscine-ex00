@@ -8,11 +8,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 90vh;
     margin: 0;
+    padding: 0;
     background-color: #f0f0f0;
     font-family: 'Science Gothic', sans-serif;
     font-weight: 700;
+    box-sizing: border-box;
 }
 
 .game {
@@ -23,7 +25,7 @@ body {
     gap: 5px;
     padding: 10px;
     border-radius: 10px;
-    margin-top: 60px;
+    margin-top: 10px;
 }
 
 .game div {
@@ -42,13 +44,12 @@ body {
 }
 
 .score-board {
-    height: auto;
-    position: absolute;
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    width: 220px;
-    top: 10px;
+    background-color: #222831;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: auto;
+    border-radius: 10px;
+    margin-top: 50px;
 }
 
 .score-board div {
@@ -57,14 +58,24 @@ body {
     padding: 10px;
     border-radius: 10px;
     text-align: center;
-    width: 100px;
-}
-
-.score-board div:first-child {
-    margin-right: 20px;
+    margin: 10px;
 }
 
 .score-board div span {
     font-size: 24px;
     font-weight: 400;
+}
+
+.score-board .score-block {
+    background-color: red;
+}
+
+.score-board #new-game {
+    background-color: #00adb5;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
 }
