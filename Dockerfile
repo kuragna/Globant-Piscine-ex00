@@ -1,8 +1,8 @@
-FROM python:3.11-slim
+FROM nginx:alpine
 
-WORKDIR /games
-COPY game /game
+WORKDIR /usr/share/nginx/html
+COPY game/* ./
 
-EXPOSE 8080
+EXPOSE 80 
 
-CMD ["python3", "-m", "http.server", "8080"]
+CMD ["nginx", "-g", "daemon off;"]
