@@ -37,8 +37,12 @@ const score = document.getElementById('score');
 const bestScoreElement = document.getElementById('best-score');
 const newGameElement = document.getElementById('new-game');
 
+const popupButton = document.getElementById('popup-button');
+const popup = document.getElementById('popup');
+
 let currentScore = 0;
 let bestScore = 0;
+let hasStoped;
 
 const rows = board.length;
 const cols = board[0].length;
@@ -51,6 +55,7 @@ function render(board) {
         let color = '#EEEEEE';
         if (board[row][col]) {
             color = cellColor.get(board[row][col]);
+            //cells[i].classList.toggle('tile-animation');
         }
         cells[i].style.backgroundColor = color;
     }
@@ -58,32 +63,23 @@ function render(board) {
     bestScoreElement.textContent = bestScore;
 }
 
-function getRandomNumber(max) {
-    return Math.floor(Math.random() * max);
-}
-
 function addRandomTile(board) {
     const emptyCells = [];
-
-    for (let y = 0; y < board.length; y++) {
-        for (let x = 0; x < board[y].length; x++) {
+    for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
             if (board[y][x] == null) {
                 emptyCells.push({ x, y });
             }
         }
     }
-
     if (emptyCells.length === 0) return false;
-
     const index = Math.floor(Math.random() * emptyCells.length);
     const { x, y } = emptyCells[index];
-
     board[y][x] = Math.random() < 0.9 ? 2 : 4;
-
     return true;
 }
 
-function initBoard(board, number) {
+function initBoard(board) {
     addRandomTile(board);
     addRandomTile(board);
 }
@@ -166,19 +162,24 @@ function moveLeft(board) {
 function matchRight(board) {
     let re = 0;
     for (let y = 0; y < rows; y++) {
+        let merged = [false, false, false, false];
         for (let x = cols - 2; x >= 0; x--) {
             if (board[y][x] != null) {
-                let current = x;
-                let target = current + 1;
+                let target = x + 1;
 
                 while (target < cols && board[y][target] == null) {
                     target++;
                 }
 
-                if (target < cols && board[y][target] === board[y][current]) {
+                if (
+                    target < cols &&
+                    board[y][target] === board[y][x] &&
+                    !merged[target]
+                ) {
                     board[y][target] *= 2;
                     re += board[y][target];
-                    board[y][current] = null;
+                    board[y][x] = null;
+                    merged[target] = true;
                 }
             }
         }
@@ -189,19 +190,22 @@ function matchRight(board) {
 function matchLeft(board) {
     let re = 0;
     for (let y = 0; y < rows; y++) {
+        let merged = [false, false, false, false];
         for (let x = 1; x < cols; x++) {
             if (board[y][x] != null) {
-                let current = x;
-                let target = current - 1;
-
+                let target = x - 1;
                 while (target >= 0 && board[y][target] == null) {
                     target--;
                 }
-
-                if (target >= 0 && board[y][target] === board[y][current]) {
+                if (
+                    target >= 0 &&
+                    board[y][target] === board[y][x] &&
+                    !merged[target]
+                ) {
                     board[y][target] *= 2;
                     re += board[y][target];
-                    board[y][current] = null;
+                    board[y][x] = null;
+                    merged[target] = true;
                 }
             }
         }
@@ -212,19 +216,22 @@ function matchLeft(board) {
 function matchDown(board) {
     let re = 0;
     for (let x = 0; x < cols; x++) {
+        let merged = [false, false, false, false];
         for (let y = rows - 2; y >= 0; y--) {
             if (board[y][x] != null) {
-                let current = y;
-                let target = current + 1;
-
+                let target = y + 1;
                 while (target < rows && board[target][x] == null) {
                     target++;
                 }
-
-                if (target < rows && board[target][x] === board[current][x]) {
+                if (
+                    target < rows &&
+                    board[target][x] === board[y][x] &&
+                    !merged[target]
+                ) {
                     board[target][x] *= 2;
                     re += board[target][x];
-                    board[current][x] = null;
+                    board[y][x] = null;
+                    merged[target] = true;
                 }
             }
         }
@@ -235,19 +242,22 @@ function matchDown(board) {
 function matchUp(board) {
     let re = 0;
     for (let x = 0; x < cols; x++) {
+        let merged = [false, false, false, false];
         for (let y = 1; y < rows; y++) {
             if (board[y][x] != null) {
-                let current = y;
-
-                let target = current - 1;
+                let target = y - 1;
                 while (target >= 0 && board[target][x] == null) {
                     target--;
                 }
-
-                if (target >= 0 && board[target][x] === board[current][x]) {
+                if (
+                    target >= 0 &&
+                    board[target][x] === board[y][x] &&
+                    !merged[target]
+                ) {
                     board[target][x] *= 2;
                     re += board[target][x];
-                    board[current][x] = null;
+                    board[y][x] = null;
+                    merged[target] = true;
                 }
             }
         }
@@ -255,49 +265,123 @@ function matchUp(board) {
     return re;
 }
 
+function setBestScore() {
+    if (currentScore > bestScore) {
+        localStorage.setItem('bestScore', currentScore);
+        bestScore = currentScore;
+    }
+}
+
+function isPlayerWin(board) {
+    for (let y = 0; y < 4; y++) {
+        for (let x = 0; x < 4; x++) {
+            if (board[y][x] === 2048) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function isGameStillPlayable(board) {
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            let value = board[y][x];
+
+            if (value == null) {
+                return true;
+            }
+            if (x < 3 && value === board[y][x + 1]) {
+                return true;
+            }
+            if (y < 3 && value === board[y + 1][x]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function checkBoardState(board) {
+    if (isPlayerWin(board)) {
+        return 'win';
+    }
+    if (isGameStillPlayable(board)) {
+        return 'continue';
+    }
+    return 'lose';
+}
+
+function endGame(text) {
+    hasStoped = true;
+    const popupSpain = document.getElementById('finish-message');
+    popup.style.display = 'block';
+    popupSpain.textContent = text;
+    setBestScore();
+}
+
 function start(board) {
+    const value = Number(localStorage.getItem('bestScore'));
+
+    if (value) {
+        bestScore = value;
+    }
+
     initBoard(board);
     render(board);
 }
 
-function newGame(board) {
+function initGame(board) {
     for (let y = 0; y < cols; y++) {
         for (let x = 0; x < rows; x++) {
             board[y][x] = null;
         }
     }
+    hasStoped = false;
+    currentScore = 0;
     start(board);
 }
 
+function update(board, moveCallBack, matchCallBack) {
+    let moved = moveCallBack(board);
+    const re = matchCallBack(board);
+    if (re) {
+        moveCallBack(board);
+        moved = true;
+    }
+    if (moved) {
+        addRandomTile(board);
+    }
+    currentScore += re;
+    render(board);
+}
+
+function checkGame(board) {
+    const status = checkBoardState(board);
+    if (status != 'continue') {
+        endGame(`You ${status}!`);
+    }
+    console.log(status);
+}
+
 function handleInput(board, key) {
+    if (hasStoped) return;
     switch (key) {
         case 'ArrowUp':
-            if (moveUp(board)) {
-                addRandomTile(board);
-            }
-            currentScore += matchUp(board);
-            render(board);
+            update(board, moveUp, matchUp);
+            checkGame(board);
             break;
         case 'ArrowDown':
-            if (moveDown(board)) {
-                addRandomTile(board);
-            }
-            currentScore += matchDown(board);
-            render(board);
+            update(board, moveDown, matchDown);
+            checkGame(board);
             break;
         case 'ArrowRight':
-            if (moveRight(board)) {
-                addRandomTile(board);
-            }
-            currentScore += matchRight(board);
-            render(board);
+            update(board, moveRight, matchRight);
+            checkGame(board);
             break;
         case 'ArrowLeft':
-            if (moveLeft(board)) {
-                addRandomTile(board);
-            }
-            currentScore += matchLeft(board);
-            render(board);
+            update(board, moveLeft, matchLeft);
+            checkGame(board);
             break;
         default:
             break;
@@ -305,7 +389,19 @@ function handleInput(board, key) {
     console.log(board);
 }
 
-newGameElement.addEventListener('click', () => newGame(board));
-document.addEventListener('keydown', (e) => handleInput(board, e.key));
+function restartGame(board) {
+    popup.style.display = 'none';
+    initGame(board);
+}
+
+popupButton.addEventListener('click', () => {
+    restartGame(board);
+});
+newGameElement.addEventListener('click', () => {
+    initGame(board);
+});
+document.addEventListener('keydown', (e) => {
+    handleInput(board, e.key);
+});
 
 start(board);
