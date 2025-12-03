@@ -13,7 +13,7 @@
 const cellColor = new Map();
 
 cellColor.set(2, '#F78D60');
-cellColor.set(4, '#533B4D');
+cellColor.set(4, '#7ADAA5');
 cellColor.set(8, '#F564A9');
 cellColor.set(16, '#FAA4BD');
 cellColor.set(32, '#FEC260');
@@ -35,6 +35,7 @@ const game = document.getElementsByClassName('game');
 const cells = document.getElementsByClassName('cell');
 const score = document.getElementById('score');
 const bestScoreElement = document.getElementById('best-score');
+const newGameElement = document.getElementById('new-game');
 
 let currentScore = 0;
 let bestScore = 0;
@@ -85,14 +86,6 @@ function addRandomTile(board) {
 function initBoard(board, number) {
     addRandomTile(board);
     addRandomTile(board);
-}
-
-function setBestScore() {
-    const value = localStorage.getItem('bestScore');
-
-    if (currentScore > value) {
-        localStorage.setItem('bestScore', currentScore);
-    }
 }
 
 function moveUp(board) {
@@ -267,8 +260,17 @@ function start(board) {
     render(board);
 }
 
-document.addEventListener('keydown', (e) => {
-    switch (e.key) {
+function newGame(board) {
+    for (let y = 0; y < cols; y++) {
+        for (let x = 0; x < rows; x++) {
+            board[y][x] = null;
+        }
+    }
+    start(board);
+}
+
+function handleInput(board, key) {
+    switch (key) {
         case 'ArrowUp':
             if (moveUp(board)) {
                 addRandomTile(board);
@@ -301,6 +303,9 @@ document.addEventListener('keydown', (e) => {
             break;
     }
     console.log(board);
-});
+}
+
+newGameElement.addEventListener('click', () => newGame(board));
+document.addEventListener('keydown', (e) => handleInput(board, e.key));
 
 start(board);
