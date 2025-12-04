@@ -3,6 +3,7 @@ a single-player sliding puzzle game where the goal is to slide numbered tiles on
 ## Quick Start
 ```console
 $ git clone https://github.com/kuragna/Globant-Piscine-ex00.git
+$ cd Globant-Piscine-ex00/ex00
 $ docker compose -f ./docker-compose.yaml up
 ```
 ## Gameplay
