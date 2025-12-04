@@ -55,7 +55,6 @@ function render(board) {
         let color = '#EEEEEE';
         if (board[row][col]) {
             color = cellColor.get(board[row][col]);
-            //cells[i].classList.toggle('tile-animation');
         }
         cells[i].style.backgroundColor = color;
     }
@@ -386,7 +385,6 @@ function handleInput(board, key) {
         default:
             break;
     }
-    console.log(board);
 }
 
 function restartGame(board) {
