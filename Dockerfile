@@ -1,7 +1,7 @@
 FROM nginx:alpine
 
 WORKDIR /usr/share/nginx/html
-COPY game/* ./
+COPY game ./
 
 EXPOSE 80 
 
